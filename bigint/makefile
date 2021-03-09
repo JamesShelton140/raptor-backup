@@ -1,0 +1,32 @@
+#ASM specifies which assembler we're using
+ASM = nasm
+
+#ASSEMBLER_FORMAT specifies which format object files to create
+ASSEMBLER_FORMAT = elf64
+
+#CC specifies which compiler we're using
+CC = gcc
+
+#COMPILER_FLAGS specifies the additional compilation options we're using
+# -w suppresses all warnings
+COMPILER_FLAGS = -Wall
+
+#LINKER_FLAGS specifies the libraries we're linking against
+LINKER_FLAGS = -lm
+
+#OBJ_NAME specifies the name of our exectuable
+OBJ_NAME = bigint
+
+#Source lists
+SRCS := $(wildcard asm/*.asm)
+BINS := $(SRCS:asm/%.asm=bin/%.o)
+
+#OBJS specifies which files to compile as part of the project
+OBJS = bigint.c $(BINS)
+
+#This is the target that compiles our executable
+all: $(OBJS)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+
+bin/%.o: asm/%.asm
+	$(ASM) -f $(ASSEMBLER_FORMAT) $< -o $@
